@@ -9,7 +9,6 @@ typedef struct {
 }
 ib;
 
-
 GENERATE_LIST(ib)
 GENERATE_LIST(l_ib)
 
@@ -37,9 +36,8 @@ read_bingo(FILE *f, l_l_ib *list)
 		ungetc(c, f);
 
 		l_ib tmp = {.first = NULL, .last = NULL};
-		for (int i = 0; i < BINGO_DIM; ++i) {
+		for (int i = 0; i < BINGO_DIM; ++i)
 			read_int_line_into_list(f, &tmp, "%i");
-		}
 		append_back_l_ib(list, tmp);
 	}
 }
@@ -56,24 +54,24 @@ int check(l_ib *l, char hor)
 	for (int i = 0; i < 5; ++i) {
 		int counter = 0;
 		for (int j = 0; j < 5; ++j)
-			counter += get_ib(l, ((hor)?
-				( i + j * BINGO_DIM): 
-				(j + i * BINGO_DIM))).b;
+			counter += get_ib(l, hor ?
+				( i + j * BINGO_DIM) : (j + i * BINGO_DIM)).b;
 		if (counter == 5)
 			return 1;
 	}
 	return 0;
 }
 
-int check_hor_ver(l_ib *l) {
+int check_hor_ver(l_ib *l)
+{
 	return check(l, 1) || check(l, 0);
 }
 
-int count_bingo(l_ib *l) {
+int count_bingo(l_ib *l)
+{
 	int sum = 0;
-	for (struct n_ib *n = l->first; n != NULL; n = n->next) {
+	for (struct n_ib *n = l->first; n != NULL; n = n->next)
 		sum += n->data.b ? 0 : n->data.num;
-	}
 	return sum;
 }
 
@@ -93,13 +91,12 @@ int main (void)
 	while (!is_empty_ib(&list) && !finished) {
 		const int num = pop_first_ib(&list).num;
 		check_bingos(&bingo, num);
-		for (struct n_l_ib *n = bingo.first; n != NULL; n = n->next) {
+		for (struct n_l_ib *n = bingo.first; n != NULL; n = n->next)
 			if (check_hor_ver(&n->data)) {
-				printf("%i\n",num * count_bingo(&n->data));
+				printf("%i\n", num * count_bingo(&n->data));
 				finished = 1;
 				break;
 			}
-		}
 	}
 
 	while(!is_empty_l_ib(&bingo)) {

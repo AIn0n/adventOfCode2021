@@ -7,18 +7,18 @@ typedef struct {
 	int num;
 	char b;
 }
-intbool;
+ib;
 
 
-GENERATE_LIST(intbool)
-GENERATE_LIST(l_intbool)
+GENERATE_LIST(ib)
+GENERATE_LIST(l_ib)
 
 void
-read_int_line_into_list(FILE *f, l_intbool *list, const char* formatting)
+read_int_line_into_list(FILE *f, l_ib *list, const char* formatting)
 {
-	intbool n = {.num = 0, .b = 0};
+	ib n = {.num = 0, .b = 0};
 	while (fscanf(f, formatting, &(n.num)) > 0) {
-		append_back_intbool(list, n);
+		append_back_ib(list, n);
 		const char c = getc(f);
 		if (c == '\n')
 			break;
@@ -27,7 +27,7 @@ read_int_line_into_list(FILE *f, l_intbool *list, const char* formatting)
 }
 
 void
-read_bingo(FILE *f, l_l_intbool *list)
+read_bingo(FILE *f, l_l_ib *list)
 {
 	char c = '\0';
 	while (1) {
@@ -36,27 +36,27 @@ read_bingo(FILE *f, l_l_intbool *list)
 			break;
 		ungetc(c, f);
 
-		l_intbool tmp = {.first = NULL, .last = NULL};
+		l_ib tmp = {.first = NULL, .last = NULL};
 		for (int i = 0; i < BINGO_DIM; ++i) {
 			read_int_line_into_list(f, &tmp, "%i");
 		}
-		append_back_l_intbool(list, tmp);
+		append_back_l_ib(list, tmp);
 	}
 }
 
-int check_bingos(l_l_intbool *l, const int num)
+int check_bingos(l_l_ib *l, const int num)
 {
-	for (struct n_l_intbool *n = l->first; n != NULL; n = n->next)
-		for (struct n_intbool *m = n->data.first; m != NULL; m = m->next)
+	for (struct n_l_ib *n = l->first; n != NULL; n = n->next)
+		for (struct n_ib *m = n->data.first; m != NULL; m = m->next)
 			m->data.b = (num == m->data.num) ? 1 : m->data.b;
 }
 
-int check(l_intbool *l, char hor)
+int check(l_ib *l, char hor)
 {
 	for (int i = 0; i < 5; ++i) {
 		int counter = 0;
 		for (int j = 0; j < 5; ++j)
-			counter += get_intbool(l, ((hor)?
+			counter += get_ib(l, ((hor)?
 				( i + j * BINGO_DIM): 
 				(j + i * BINGO_DIM))).b;
 		if (counter == 5)
@@ -65,13 +65,13 @@ int check(l_intbool *l, char hor)
 	return 0;
 }
 
-int check_hor_ver(l_intbool *l) {
+int check_hor_ver(l_ib *l) {
 	return check(l, 1) || check(l, 0);
 }
 
-int count_bingo(l_intbool *l) {
+int count_bingo(l_ib *l) {
 	int sum = 0;
-	for (struct n_intbool *n = l->first; n != NULL; n = n->next) {
+	for (struct n_ib *n = l->first; n != NULL; n = n->next) {
 		sum += n->data.b ? 0 : n->data.num;
 	}
 	return sum;
@@ -83,17 +83,17 @@ int main (void)
 	FILE *f = fopen("input.txt", "r");
 	if (f == NULL)
 		return 1;
-	l_intbool list = {.first = NULL, .last = NULL};
-	l_l_intbool bingo = {.first = NULL, .last = NULL};
+	l_ib list = {.first = NULL, .last = NULL};
+	l_l_ib bingo = {.first = NULL, .last = NULL};
 
 	read_int_line_into_list(f, &list, "%u,");
 	read_bingo(f, &bingo);
 
 	char finished = 0;
-	while (!is_empty_intbool(&list) && !finished) {
-		const int num = pop_first_intbool(&list).num;
+	while (!is_empty_ib(&list) && !finished) {
+		const int num = pop_first_ib(&list).num;
 		check_bingos(&bingo, num);
-		for (struct n_l_intbool *n = bingo.first; n != NULL; n = n->next) {
+		for (struct n_l_ib *n = bingo.first; n != NULL; n = n->next) {
 			if (check_hor_ver(&n->data)) {
 				printf("%i\n",num * count_bingo(&n->data));
 				finished = 1;
@@ -102,11 +102,11 @@ int main (void)
 		}
 	}
 
-	while(!is_empty_l_intbool(&bingo)) {
-		l_intbool m = pop_first_l_intbool(&bingo);
-		while(!is_empty_intbool(&m))
-			pop_first_intbool(&m);
+	while(!is_empty_l_ib(&bingo)) {
+		l_ib m = pop_first_l_ib(&bingo);
+		while(!is_empty_ib(&m))
+			pop_first_ib(&m);
 	}
-	destroy_intbool(&list);
+	destroy_ib(&list);
 	fclose(f);
 }

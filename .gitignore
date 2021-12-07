@@ -3,3 +3,6 @@ input.txt
 
 #cpp executables
 *.out
+
+#java bytecode
+*.class

@@ -82,11 +82,13 @@ int main (void)
         for (std::string s : outputs[i]) {
             for (int j = 0; j < mapping.size(); ++j) {
                 if (mapping[j] == s) {
-                    counter += j * 10;
+                    counter += j;
+                    counter *= 10;
                     break;
                 }
             }
         }
+        sum += counter/10;
     }
     std::cout << sum << '\n';
 }

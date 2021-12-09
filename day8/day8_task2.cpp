@@ -30,8 +30,8 @@ size_t countCommon(const std::string f, const std::string s)
 void removeAndAddMappingIfEq(
     std::vector<std::string> &in, 
     std::array<std::string, 10> &mapping, 
-    size_t cmp_map_idx,
     size_t out_map_idx,
+    size_t cmp_map_idx,
     int val)
 {
     for (int i = 0; i < in.size(); ++i) {
@@ -41,15 +41,6 @@ void removeAndAddMappingIfEq(
             return;       
         }
     }
-}
-
-void findNine(std::vector<std::string> &in, std::array<std::string, 10> &mapping)
-{
-}
-
-void findZero(std::vector<std::string> &in, std::array<std::string, 10> &mapping)
-{
-
 }
 
 std::vector<std::string>
@@ -72,7 +63,7 @@ int main (void)
         outputs.push_back(splitBySpacesAndSort(tmp[1]));
     }
     std::array<std::string, 10> mapping;
-    int counter = 0;
+    int counter = 0, sum = 0;
     for (int i = 0; i < signals.size(); ++i) {
         mapping[1] = getWithLen(signals[i], 2)[0];
         mapping[4] = getWithLen(signals[i], 4)[0];
@@ -84,13 +75,18 @@ int main (void)
         mapping[6] = lenSix[0];
         std::vector<std::string>lenFive = getWithLen(signals[i], 5);
         removeAndAddMappingIfEq(lenFive, mapping, 2, 9, 4);
-        removeAndAddMappingIfEq(lenFive, mapping, 5, 1, 2);
+        removeAndAddMappingIfEq(lenFive, mapping, 5, 1, 1);
         mapping[3] = lenFive[0];
+
+        int counter = 0;
+        for (std::string s : outputs[i]) {
+            for (int j = 0; j < mapping.size(); ++j) {
+                if (mapping[j] == s) {
+                    counter += j * 10;
+                    break;
+                }
+            }
+        }
     }
-    for (const auto &n : mapping) {
-        std:: cout << n << '\n';
-    }
-    for (int i = 0; i < mapping.size(); ++i)
-        std::cout << "index = " << i << "\t" << mapping[i] << '\n';
-    std:: cout << '\n';
+    std::cout << sum << '\n';
 }

@@ -45,7 +45,7 @@ int main (void) {
     for (string s; getline(f, s);)
         if (!is_corrupted(s, expected, r_brk)) {
             vector<char> clos = get_closing(s, r_brk);
-            points.push_back(accumulate(clos.begin(), clos.end(), 0, 
+            points.push_back(accumulate(clos.begin(), clos.end(), 0L, 
             [=](uint64_t x, char c){
                 return x * 5 + vals.at(c);
             }));
